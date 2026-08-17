@@ -30,7 +30,7 @@ export default function AboutPage() {
           <Reveal delay={120}>
             <div className="hero-photo-frame">
               <Image
-                src="/hero-photo.jpg"
+                src="/khaled-at-work.jpg"
                 alt={`${site.name}, ${site.role}`}
                 width={880}
                 height={660}

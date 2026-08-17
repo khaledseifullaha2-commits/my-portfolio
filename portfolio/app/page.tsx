@@ -184,7 +184,7 @@ export default function HomePage() {
           <Reveal>
             <div className="hero-photo-frame">
               <Image
-                src="/about-photo.jpg"
+                src="/khaled-at-work.jpg"
                 alt={`${site.name}, ${site.role}`}
                 width={880}
                 height={660}

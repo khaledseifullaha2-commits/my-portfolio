@@ -43,7 +43,7 @@ export default function ThreeDCard() {
           Khaled Seifullaha · Portfolio
         </p>
         <div className="td-media" data-z="100">
-          <Image src="/about-photo.jpg" alt="Khaled at work" width={880} height={660} priority />
+          <Image src="/hero.jpg" alt="Khaled Seifullaha" width={880} height={660} priority />
         </div>
         <div className="td-actions">
           <Link href="/skills-services" className="btn btn-primary" data-z="20">
