@@ -228,6 +228,71 @@ const DeskGraphic = ({ width = 300 }) => (
   </svg>
 );
 
+/** Clipboard with checklist and magnifying glass (Production Operators reference). */
+const ClipboardGraphic = ({ width = 300 }) => (
+  <svg width={width} height={width * 0.95} viewBox="0 0 300 285" fill="none" aria-hidden="true">
+    {/* Clipboard board */}
+    <rect x="30" y="20" width="180" height="240" rx="14" fill="#ffffff" stroke={G_NAVY} strokeWidth="4" />
+    <rect x="80" y="10" width="80" height="26" rx="8" fill={G_RED} />
+    <rect x="95" y="16" width="50" height="14" rx="4" fill="#ffffff" opacity="0.5" />
+    {/* Checklist items */}
+    {[55, 95, 135, 175].map((y, i) => (
+      <g key={i}>
+        <rect x="52" y={y} width="16" height="16" rx="3" stroke={G_NAVY} strokeWidth="2" fill="#ffffff" />
+        {i < 3 && <path d={`M55 ${y + 8} l3 3 6-6`} stroke={G_RED} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />}
+        <rect x="78" y={y + 2} width={80 - i * 8} height="5" rx="2" fill={G_LINE} />
+        <rect x="78" y={y + 10} width={60 - i * 6} height="4" rx="2" fill="#e2e8f0" />
+      </g>
+    ))}
+    {/* Magnifying glass overlay */}
+    <circle cx="210" cy="190" r="52" stroke={G_NAVY} strokeWidth="8" fill="rgba(255,255,255,0.92)" />
+    <circle cx="210" cy="190" r="42" stroke={G_NAVY} strokeWidth="2" opacity="0.2" fill="none" />
+    {/* Candidate silhouette */}
+    <circle cx="210" cy="176" r="14" fill={G_RED} />
+    <path d="M186 216c0-20 12-30 24-30s24 10 24 30" fill={G_RED} opacity="0.85" />
+    <line x1="252" y1="224" x2="270" y2="242" stroke={G_NAVY} strokeWidth="12" strokeLinecap="round" />
+  </svg>
+);
+
+/** Megaphone with social media icons (Communications Officer reference). */
+const MegaphoneGraphic = ({ width = 280 }) => (
+  <svg width={width} height={width * 0.88} viewBox="0 0 310 272" fill="none" aria-hidden="true">
+    {/* Megaphone body */}
+    <path d="M60 80 L60 180 L90 180 L160 230 L160 30 L90 80 Z" fill={G_NAVY} />
+    <path d="M60 80 L60 180 L90 180 L160 230 L160 30 L90 80 Z" fill="url(#megaphoneGrad)" />
+    <ellipse cx="60" cy="130" rx="8" ry="52" fill="#0f1f4d" />
+    {/* Sound waves */}
+    <path d="M172 110 Q195 130 172 150" stroke={G_RED} strokeWidth="4" strokeLinecap="round" fill="none" />
+    <path d="M186 96 Q220 130 186 164" stroke={G_RED} strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.7" />
+    <path d="M200 82 Q244 130 200 178" stroke={G_RED} strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.45" />
+    {/* Social media icons */}
+    <circle cx="200" cy="60" r="22" fill="#1877f2" />
+    <text x="193" y="68" fontSize="26" fontWeight="900" fill="#ffffff" fontFamily="Arial">f</text>
+    <circle cx="240" cy="100" r="22" fill="url(#igGrad)" />
+    <rect x="228" y="88" width="24" height="24" rx="7" stroke="#ffffff" strokeWidth="3" fill="none" />
+    <circle cx="240" cy="100" r="7" stroke="#ffffff" strokeWidth="3" fill="none" />
+    <circle cx="270" cy="60" r="22" fill="#0077b5" />
+    <text x="262" y="68" fontSize="22" fontWeight="900" fill="#ffffff" fontFamily="Arial">in</text>
+    <circle cx="250" cy="150" r="22" fill="#ff0000" />
+    <polygon points="244,140 244,160 262,150" fill="#ffffff" />
+    {/* Decorative dots */}
+    {[{ x: 40, y: 60 }, { x: 20, y: 120 }, { x: 30, y: 200 }, { x: 280, y: 200 }, { x: 50, y: 240 }].map((p, i) => (
+      <circle key={i} cx={p.x} cy={p.y} r="4" fill={G_LINE} opacity="0.5" />
+    ))}
+    <defs>
+      <linearGradient id="megaphoneGrad" x1="60" y1="30" x2="160" y2="230">
+        <stop offset="0%" stopColor="#1b3167" />
+        <stop offset="100%" stopColor="#0f1f4d" />
+      </linearGradient>
+      <linearGradient id="igGrad" x1="218" y1="78" x2="262" y2="122">
+        <stop offset="0%" stopColor="#f58529" />
+        <stop offset="50%" stopColor="#dd2a7b" />
+        <stop offset="100%" stopColor="#8134af" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
 /* ── Helpers ── */
 
 /** Keep a contentEditable element's text in sync with `value` without clobbering it while focused. */
@@ -261,7 +326,12 @@ const EditableText = ({ value, onCommit, style, label = "Editable text" }) => {
   );
 };
 
-function titleSize(title) {
+function titleSize(title, preset) {
+  if (preset === "S") return 32;
+  if (preset === "M") return 40;
+  if (preset === "L") return 48;
+  if (preset === "XL") return 56;
+  // auto
   if (title.length > 46) return 40;
   if (title.length > 34) return 46;
   return 54;
@@ -301,6 +371,8 @@ const ECO_ITEMS = [
 
 const GRAPHICS = {
   magnifier: MagnifierGraphic,
+  clipboard: ClipboardGraphic,
+  megaphone: MegaphoneGraphic,
   pen: PenHandGraphic,
   desk: DeskGraphic,
 };
@@ -363,6 +435,7 @@ const PosterCanvas = forwardRef(function PosterCanvas(
     graphic: data.showGraphic !== false,
     cta: data.showCTA !== false,
     footer: data.showFooter !== false,
+    salary: data.showSalary !== false,
   };
   const titleColor = (data.titleColor || "").trim();
   const ribbonColor = (data.ribbonColor || "").trim() || (C ? C.green : "#16a34a");
@@ -763,7 +836,7 @@ const PosterCanvas = forwardRef(function PosterCanvas(
         marginTop: corp ? 20 : 24,
         textAlign: "center",
         fontFamily: corp || !serifTitle ? SANS : SERIF,
-        fontSize: titleSize(title),
+        fontSize: titleSize(title, data.titleSizePreset),
         fontWeight: 800,
         lineHeight: corp ? 1.14 : 1.12,
         letterSpacing: "-0.01em",
@@ -888,6 +961,64 @@ const PosterCanvas = forwardRef(function PosterCanvas(
         </div>
       </div>
     ) : null;
+
+  const CoinIcon = (p) => (
+    <Icon {...p}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 6v12M9 8.5h5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H14" />
+    </Icon>
+  );
+
+  const salaryBlock = (data.salary || "").trim() && show.salary ? (
+    <div style={{ marginTop: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 20 }}>
+      <div
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 14,
+          padding: "16px 26px",
+          borderRadius: 20,
+          background: t.infoBg,
+          border: t.infoBorder === "none" ? "none" : `1px solid ${t.infoBorder}`,
+          boxShadow: t.infoShadow === "none" ? "none" : t.infoShadow,
+        }}
+      >
+        <div
+          style={{
+            width: 46,
+            height: 46,
+            borderRadius: 14,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: corp ? C.green : t.tileA,
+            flexShrink: 0,
+          }}
+        >
+          <CoinIcon size={22} color="#ffffff" />
+        </div>
+        <div>
+          <div style={{ fontSize: 13, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700, color: t.label }}>
+            Salary
+          </div>
+          <EditableText
+            value={data.salary}
+            onCommit={(v) => onFieldChange?.("salary", v)}
+            label="Salary"
+            style={{ marginTop: 3, fontSize: 20, fontWeight: 800, color: t.value, display: "block" }}
+          />
+          {(data.salaryNote || "").trim() ? (
+            <EditableText
+              value={data.salaryNote}
+              onCommit={(v) => onFieldChange?.("salaryNote", v)}
+              label="Salary note"
+              style={{ marginTop: 2, fontSize: 13, color: t.label, fontStyle: "italic", display: "block" }}
+            />
+          ) : null}
+        </div>
+      </div>
+    </div>
+  ) : null;
 
   /* ── Section cards ── */
   // When the auto-fit shrinks text, also compact card spacing so everything fits.
@@ -1251,6 +1382,7 @@ const PosterCanvas = forwardRef(function PosterCanvas(
       {introBlock}
       {titleBlock}
       {show.chip ? chipBlock : null}
+      {salaryBlock}
       <div
         style={{
           marginTop: 26,
@@ -1335,6 +1467,7 @@ const PosterCanvas = forwardRef(function PosterCanvas(
         {titleBlock}
         {show.chip ? chipBlock : null}
         {infoBar}
+        {salaryBlock}
       </>
     );
 
@@ -1382,6 +1515,7 @@ const PosterCanvas = forwardRef(function PosterCanvas(
             {show.chip ? chipBlock : null}
           </div>
           {infoBar}
+          {salaryBlock}
           {cardsGrid}
           {bottom}
         </>

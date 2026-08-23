@@ -9,6 +9,8 @@ const SAMPLE = {
   title: "Executive — Talent Acquisition",
   companyType: "A Renowned Educational Institution",
   deadline: "URGENT — Apply by 15 September 2026",
+  salary: "",
+  salaryNote: "",
   sections: [
     {
       id: "resp",
@@ -70,6 +72,7 @@ const SAMPLE = {
   showGraphic: true,
   showCTA: true,
   showFooter: true,
+  showSalary: true,
   // Per-part custom colors (empty = template default)
   titleColor: "",
   ribbonColor: "",
@@ -129,8 +132,11 @@ export default function App() {
   const posterData = useMemo(
     () => ({
       title: form.title.trim(),
+      titleSizePreset: form.titleSizePreset || "auto",
       companyType: form.companyType.trim(),
       deadline: form.deadline.trim(),
+      salary: (form.salary || "").trim(),
+      salaryNote: (form.salaryNote || "").trim(),
       sections: (form.sections || []).map((s) => ({
         id: s.id,
         heading: (s.heading || "").trim(),
@@ -164,6 +170,7 @@ export default function App() {
       showGraphic: form.showGraphic !== false,
       showCTA: form.showCTA !== false,
       showFooter: form.showFooter !== false,
+      showSalary: form.showSalary !== false,
       titleColor: (form.titleColor || "").trim(),
       ribbonColor: (form.ribbonColor || "").trim(),
       cardBg: (form.cardBg || "").trim(),
@@ -256,6 +263,8 @@ export default function App() {
       leftLogoImage: "",
       referenceImage: "",
       extractedColors: null,
+      salary: "",
+      salaryNote: "",
       graphic: "magnifier",
       introText: "",
       showEco: true,
@@ -268,6 +277,7 @@ export default function App() {
       showGraphic: true,
       showCTA: true,
       showFooter: true,
+      showSalary: true,
       titleColor: "",
       ribbonColor: "",
       cardBg: "",
@@ -663,6 +673,7 @@ export default function App() {
                     ["showIntro", "Intro phrase"],
                     ["showChip", "Company type chip"],
                     ["showDeadline", "Deadline ribbon / tile"],
+                    ["showSalary", "Salary / Compensation"],
                     ["showGraphic", "Recruitment graphic"],
                     ["showFooter", "PLEASE NOTE footer"],
                   ].map(([key, label]) => (
@@ -860,6 +871,8 @@ export default function App() {
                 <select id="graphic" value={form.graphic} onChange={(e) => set("graphic", e.target.value)} className={inputClass}>
                   <option value="none">None</option>
                   <option value="magnifier">Magnifying Glass &amp; Candidate</option>
+                  <option value="clipboard">Clipboard &amp; Magnifier</option>
+                  <option value="megaphone">Megaphone &amp; Social Media</option>
                   <option value="pen">Hand &amp; Pen (signature)</option>
                   <option value="desk">Professional Desk Setup</option>
                 </select>
@@ -888,6 +901,28 @@ export default function App() {
                   placeholder="e.g. Executive — Talent Acquisition"
                   className={inputClass}
                 />
+                <div className="jp-align-btns" role="group" aria-label="Title font size" style={{ marginTop: 6 }}>
+                  {["S", "M", "L", "XL"].map((label) => (
+                    <button
+                      key={label}
+                      type="button"
+                      className={`jp-icon-btn ${(form.titleSizePreset || "auto") === label ? "active" : ""}`}
+                      onClick={() => set("titleSizePreset", label)}
+                      style={{ fontSize: 11, fontWeight: 700 }}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    className={`jp-icon-btn ${(form.titleSizePreset || "auto") === "auto" ? "active" : ""}`}
+                    onClick={() => set("titleSizePreset", "auto")}
+                    style={{ fontSize: 10, fontWeight: 600 }}
+                  >
+                    Auto
+                  </button>
+                </div>
+                <p className="jp-hint">Title font size presets: S (32px), M (40px), L (48px), XL (56px). Auto adjusts by title length.</p>
               </div>
 
               <div className="jp-field">
@@ -898,6 +933,29 @@ export default function App() {
                   value={form.companyType}
                   onChange={(e) => set("companyType", e.target.value)}
                   placeholder="e.g. A Renowned Educational Institution"
+                  className={inputClass}
+                />
+              </div>
+
+              <div className="jp-field">
+                <label htmlFor="salary">Salary / Compensation</label>
+                <input
+                  id="salary"
+                  type="text"
+                  value={form.salary}
+                  onChange={(e) => set("salary", e.target.value)}
+                  placeholder="e.g. 60-70K (BDT) or Attractive & Negotiable"
+                  className={inputClass}
+                />
+              </div>
+              <div className="jp-field">
+                <label htmlFor="salaryNote">Salary Note <span className="jp-hint-inline">(optional)</span></label>
+                <input
+                  id="salaryNote"
+                  type="text"
+                  value={form.salaryNote}
+                  onChange={(e) => set("salaryNote", e.target.value)}
+                  placeholder="e.g. Based on experience and competencies"
                   className={inputClass}
                 />
               </div>
