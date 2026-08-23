@@ -11,6 +11,13 @@ const SAMPLE = {
   deadline: "URGENT — Apply by 15 September 2026",
   salary: "",
   salaryNote: "",
+  infoTiles: [
+    { label: "Organization", value: "" },
+    { label: "Employment Type", value: "" },
+    { label: "Job Location", value: "" },
+  ],
+  numbered: false,
+  footerStyle: "pleaseNote",
   sections: [
     {
       id: "resp",
@@ -73,6 +80,7 @@ const SAMPLE = {
   showCTA: true,
   showFooter: true,
   showSalary: true,
+  showInfoTiles: true,
   // Per-part custom colors (empty = template default)
   titleColor: "",
   ribbonColor: "",
@@ -137,6 +145,9 @@ export default function App() {
       deadline: form.deadline.trim(),
       salary: (form.salary || "").trim(),
       salaryNote: (form.salaryNote || "").trim(),
+      infoTiles: (form.infoTiles || []).filter((t) => t.value && t.value.trim()),
+      numbered: !!form.numbered,
+      footerStyle: form.footerStyle || "pleaseNote",
       sections: (form.sections || []).map((s) => ({
         id: s.id,
         heading: (s.heading || "").trim(),
@@ -171,6 +182,7 @@ export default function App() {
       showCTA: form.showCTA !== false,
       showFooter: form.showFooter !== false,
       showSalary: form.showSalary !== false,
+      showInfoTiles: form.showInfoTiles !== false,
       titleColor: (form.titleColor || "").trim(),
       ribbonColor: (form.ribbonColor || "").trim(),
       cardBg: (form.cardBg || "").trim(),
@@ -675,6 +687,7 @@ export default function App() {
                     ["showDeadline", "Deadline ribbon / tile"],
                     ["showSalary", "Salary / Compensation"],
                     ["showGraphic", "Recruitment graphic"],
+                    ["showInfoTiles", "Info tiles row"],
                     ["showFooter", "PLEASE NOTE footer"],
                   ].map(([key, label]) => (
                     <label key={key} className="jp-check">
@@ -1127,6 +1140,166 @@ export default function App() {
                   Reorder sections with ↑ ↓, delete with ✕, untick “Show heading” to hide it, and set bullet text
                   size / bold / italic per section. You can also click headings directly on the poster to edit them.
                 </p>
+              </div>
+
+              {/* Info tiles row (Communications Officer style) */}
+              <div className="jp-field">
+                <label>Info Tiles Row</label>
+                <p className="jp-hint">Shows Organization, Type, Location etc. as horizontal cards below the title.</p>
+                {(form.infoTiles || []).map((tile, idx) => (
+                  <div key={idx} className="jp-list-row" style={{ marginBottom: 4 }}>
+                    <input
+                      type="text"
+                      value={tile.label}
+                      onChange={(e) => {
+                        const tiles = [...(form.infoTiles || [])];
+                        tiles[idx] = { ...tiles[idx], label: e.target.value };
+                        set("infoTiles", tiles);
+                      }}
+                      placeholder="Label"
+                      className={inputClass}
+                      style={{ width: 120, flexShrink: 0 }}
+                    />
+                    <input
+                      type="text"
+                      value={tile.value}
+                      onChange={(e) => {
+                        const tiles = [...(form.infoTiles || [])];
+                        tiles[idx] = { ...tiles[idx], value: e.target.value };
+                        set("infoTiles", tiles);
+                      }}
+                      placeholder="Value"
+                      className={inputClass}
+                    />
+                    <button
+                      type="button"
+                      className="jp-remove"
+                      onClick={() => {
+                        const tiles = (form.infoTiles || []).filter((_, i) => i !== idx);
+                        set("infoTiles", tiles);
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+                {(form.infoTiles || []).length < 6 ? (
+                  <button
+                    type="button"
+                    className="jp-add"
+                    onClick={() => {
+                      const tiles = [...(form.infoTiles || []), { label: "", value: "" }];
+                      set("infoTiles", tiles);
+                    }}
+                  >
+                    + Add Info Tile
+                  </button>
+                ) : null}
+              </div>
+
+              {/* Numbered lists + Footer style */}
+              <div className="jp-field">
+                <label>Style Options</label>
+                <label className="jp-check" style={{ marginBottom: 6 }}>
+                  <input
+                    type="checkbox"
+                    checked={!!form.numbered}
+                    onChange={(e) => set("numbered", e.target.checked)}
+                  />
+                  <span>Numbered requirements (1, 2, 3…)</span>
+                </label>
+                <label style={{ display: "block", marginTop: 6 }}>
+                  <span className="jp-hint-inline">Footer style</span>
+                </label>
+                <select
+                  value={form.footerStyle || "pleaseNote"}
+                  onChange={(e) => set("footerStyle", e.target.value)}
+                  className={inputClass}
+                >
+                  <option value="pleaseNote">PLEASE NOTE box</option>
+                  <option value="blueWave">Blue wave with APPLY NOW</option>
+                  <option value="none">No footer</option>
+                </select>
+              </div>
+
+              {/* Info tiles row (Communications Officer style) */}
+              <div className="jp-field">
+                <label>Info Tiles Row</label>
+                <p className="jp-hint">Shows Organization, Type, Location etc. as horizontal cards below the title.</p>
+                {(form.infoTiles || []).map((tile, idx) => (
+                  <div key={idx} className="jp-list-row" style={{ marginBottom: 4 }}>
+                    <input
+                      type="text"
+                      value={tile.label}
+                      onChange={(e) => {
+                        const tiles = [...(form.infoTiles || [])];
+                        tiles[idx] = { ...tiles[idx], label: e.target.value };
+                        set("infoTiles", tiles);
+                      }}
+                      placeholder="Label"
+                      className={inputClass}
+                      style={{ width: 120, flexShrink: 0 }}
+                    />
+                    <input
+                      type="text"
+                      value={tile.value}
+                      onChange={(e) => {
+                        const tiles = [...(form.infoTiles || [])];
+                        tiles[idx] = { ...tiles[idx], value: e.target.value };
+                        set("infoTiles", tiles);
+                      }}
+                      placeholder="Value"
+                      className={inputClass}
+                    />
+                    <button
+                      type="button"
+                      className="jp-remove"
+                      onClick={() => {
+                        const tiles = (form.infoTiles || []).filter((_, i) => i !== idx);
+                        set("infoTiles", tiles);
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ))}
+                {(form.infoTiles || []).length < 6 ? (
+                  <button
+                    type="button"
+                    className="jp-add"
+                    onClick={() => {
+                      const tiles = [...(form.infoTiles || []), { label: "", value: "" }];
+                      set("infoTiles", tiles);
+                    }}
+                  >
+                    + Add Info Tile
+                  </button>
+                ) : null}
+              </div>
+
+              {/* Numbered lists + Footer style */}
+              <div className="jp-field">
+                <label>Style Options</label>
+                <label className="jp-check" style={{ marginBottom: 6 }}>
+                  <input
+                    type="checkbox"
+                    checked={!!form.numbered}
+                    onChange={(e) => set("numbered", e.target.checked)}
+                  />
+                  <span>Numbered requirements (1, 2, 3…)</span>
+                </label>
+                <label style={{ display: "block", marginTop: 6 }}>
+                  <span className="jp-hint-inline">Footer style</span>
+                </label>
+                <select
+                  value={form.footerStyle || "pleaseNote"}
+                  onChange={(e) => set("footerStyle", e.target.value)}
+                  className={inputClass}
+                >
+                  <option value="pleaseNote">PLEASE NOTE box</option>
+                  <option value="blueWave">Blue wave with APPLY NOW</option>
+                  <option value="none">No footer</option>
+                </select>
               </div>
 
               <div className="jp-field">

@@ -874,6 +874,34 @@ const PosterCanvas = forwardRef(function PosterCanvas(
     </div>
   ) : null;
 
+  /* ── Info tiles row (Communications Officer style) ── */
+  const infoTiles = (data.infoTiles || []).length > 0 && show.infoTiles ? (
+    <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap", marginTop: 20 }}>
+      {data.infoTiles.map((tile, i) => (
+        <div
+          key={i}
+          style={{
+            flex: "1 1 0",
+            minWidth: 140,
+            maxWidth: 220,
+            padding: "14px 16px",
+            borderRadius: 16,
+            background: corp ? C.light : t.banner ? "rgba(255,255,255,0.16)" : t.chipBg,
+            border: corp ? `1px solid ${C.border}` : t.banner ? "1px solid rgba(255,255,255,0.45)" : `1px solid ${t.chipBorder}`,
+            textAlign: "center",
+          }}
+        >
+          <div style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 700, color: t.label }}>
+            {tile.label}
+          </div>
+          <div style={{ fontSize: 15, fontWeight: 800, color: corp ? C.navy : t.banner ? "#ffffff" : t.value, marginTop: 4 }}>
+            {tile.value}
+          </div>
+        </div>
+      ))}
+    </div>
+  ) : null;
+
   /* ── Deadline: green chevron ribbon (corporate only) ── */
   const deadlineRibbon = corp && show.deadline ? (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -1123,6 +1151,26 @@ const PosterCanvas = forwardRef(function PosterCanvas(
     <div style={{ textAlign: s.align || "left" }}>
       {items.map((item, i) => (
         <div key={i} style={{ display: "flex", gap: 13, alignItems: "flex-start", marginBottom: Math.round(14 * comp), justifyContent: (s.align || "left") === "right" ? "flex-end" : "flex-start", flexDirection: (s.align || "left") === "right" ? "row-reverse" : "row" }}>
+          {data.numbered ? (
+            <span
+              style={{
+                width: 28,
+                height: 28,
+                borderRadius: "50%",
+                background: kind === "resp" ? t.markerA : t.markerB,
+                color: "#ffffff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 13,
+                fontWeight: 800,
+                marginTop: Math.round((bulletLines > 5 ? 6 : 8) * comp),
+                flexShrink: 0,
+              }}
+            >
+              {i + 1}
+            </span>
+          ) : (
           <span
             style={{
               width: 9,
@@ -1133,7 +1181,7 @@ const PosterCanvas = forwardRef(function PosterCanvas(
               marginTop: Math.round((bulletLines > 5 ? 9 : 11) * comp),
               flexShrink: 0,
             }}
-          />
+          />)}
           <EditableText
             value={item}
             onCommit={(v) => onBulletChange?.(s.id, i, v)}
@@ -1374,6 +1422,71 @@ const PosterCanvas = forwardRef(function PosterCanvas(
     </div>
   );
 
+  /* ── Blue wave footer (HR & Talent / Head of Sales style) ── */
+  const blueWaveFooter = data.footerStyle === "blueWave" && show.footer ? (
+    <div style={{ marginTop: "auto" }}>
+      <svg
+        width="100%"
+        height="80"
+        viewBox="0 0 1080 80"
+        preserveAspectRatio="none"
+        style={{ display: "block", marginBottom: -2 }}
+      >
+        <path
+          d="M0 40 Q270 0 540 40 Q810 80 1080 40 L1080 80 L0 80 Z"
+          fill={corp ? C.navy : t.accentDark || t.accent}
+        />
+      </svg>
+      <div
+        style={{
+          background: corp ? C.navy : t.accentDark || t.accent,
+          padding: "20px 40px 24px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 24,
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "14px 28px",
+              borderRadius: 14,
+              background: corp ? C.red : t.accent,
+              boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+            }}
+          >
+            <SendIcon size={22} color="#ffffff" />
+            <span style={{ fontSize: 22, fontWeight: 900, color: "#ffffff", letterSpacing: "0.1em" }}>APPLY NOW</span>
+          </div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-end" }}>
+          <div style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", fontWeight: 600 }}>
+            EMAIL YOUR UPDATED RESUME AT
+          </div>
+          {emails.slice(0, 2).map((email, i) => (
+            <EditableText
+              key={i}
+              value={email}
+              onCommit={(v) => editEmail(i, v)}
+              label="Email address"
+              style={{ fontSize: 18, fontWeight: 800, color: "#ffffff", wordBreak: "break-all" }}
+            />
+          ))}
+          <EditableText
+            value={data.noteText || "Mention the role in mail subject"}
+            onCommit={(v) => onFieldChange?.("noteText", v)}
+            label="Submission note"
+            style={{ fontSize: 13, color: "rgba(255,255,255,0.75)", marginTop: 4 }}
+          />
+        </div>
+      </div>
+    </div>
+  ) : null;
+
   /* ── Corporate layout: centered header, badge, intro, title, ribbon+graphic row ── */
   const corporateContent = (
     <>
@@ -1382,6 +1495,7 @@ const PosterCanvas = forwardRef(function PosterCanvas(
       {introBlock}
       {titleBlock}
       {show.chip ? chipBlock : null}
+      {infoTiles}
       {salaryBlock}
       <div
         style={{
@@ -1422,7 +1536,9 @@ const PosterCanvas = forwardRef(function PosterCanvas(
           )
         )}
       </div>
-      <div style={{ marginTop: "auto", paddingTop: 30 }}>{show.footer ? pleaseNote : null}</div>
+      <div style={{ marginTop: "auto", paddingTop: 30 }}>
+        {data.footerStyle === "blueWave" ? blueWaveFooter : show.footer ? pleaseNote : null}
+      </div>
     </>
   );
 
@@ -1453,7 +1569,7 @@ const PosterCanvas = forwardRef(function PosterCanvas(
       </div>
     );
 
-    const bottom = (
+    const bottom = data.footerStyle === "blueWave" ? blueWaveFooter : (
       <div style={{ marginTop: "auto", paddingTop: 30 }}>
         {show.cta ? cta : null}
         {show.footer ? pleaseNote : null}
@@ -1466,6 +1582,7 @@ const PosterCanvas = forwardRef(function PosterCanvas(
         {introBlock}
         {titleBlock}
         {show.chip ? chipBlock : null}
+        {infoTiles}
         {infoBar}
         {salaryBlock}
       </>
