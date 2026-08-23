@@ -719,6 +719,28 @@ select.jp-input option {
   margin-top: 4px;
 }
 
+/* ── Alignment button group ── */
+.jp-align-btns {
+  display: inline-flex;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 2px;
+  border: 1px solid var(--border);
+}
+
+.jp-align-btns .jp-icon-btn {
+  width: 28px;
+  height: 28px;
+  font-size: 0.75rem;
+}
+
+.jp-align-btns .jp-icon-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
 /* ── Word-style editable text on the poster ── */
 .jp-editable {
   outline: 1px dashed transparent;

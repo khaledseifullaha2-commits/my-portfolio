@@ -76,6 +76,14 @@ project with no unrelated folders inside.
 - **Per-part custom colors** — granular color pickers override the **title
   text**, **deadline ribbon**, **card backgrounds** and **footer banner**
   independently (empty = template default; a reset button restores it).
+- **Reference image theme replicator** — upload any sample corporate flyer
+  poster and the app instantly extracts dominant colors from it using
+  Canvas pixel sampling (no API, no network) and applies them as the poster's
+  accent, title, badge, card-border and footer colors — so you can match any
+  brand style from a single reference image.
+- **Per-section text alignment** — each section has left / center / right
+  alignment buttons; both the heading and the bullet list render with the
+  chosen alignment on the poster.
 - **Click-to-edit headings** — edit the card headings directly on the poster
   (e.g. `RESPONSIBILITIES` → `KEY DUTIES`); the form inputs stay in sync.
   Badge text and the submission note are also editable.
@@ -117,13 +125,13 @@ npm run preview
 ```
 index.html                # entry HTML + self-hosted fonts
 public/fonts/             # Inter + Playfair Display woff2 (same-origin for exports)
-scripts/fetch-fonts.mjs   # regenerates public/fonts from Google Fonts
-src/
+scripts/fetch-fonts.mjs   # regenerates public/fonts from Google Fonts  src/
   main.jsx                # React root
   App.jsx                 # split-screen studio, mode toggle, themes, layouts, graphics, export
   PosterCanvas.jsx        # fixed 1080×1350 canvas (header, cards, footer, corporate path, SVGs)
   templates.js            # themes (Navy/Red/Green/Black-White) + 10 templates + palette resolver
   lib/extractLocal.js     # zero-API regex parser + optional browser Gemini client
+  lib/extractColors.js    # Canvas-based color extraction from uploaded reference images
   styles.css              # app chrome (dark split-screen shell)
 ```
 

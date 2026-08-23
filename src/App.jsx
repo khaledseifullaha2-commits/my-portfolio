@@ -3,6 +3,7 @@ import { toPng } from "html-to-image";
 import PosterCanvas, { POSTER_WIDTH, POSTER_HEIGHT } from "./PosterCanvas.jsx";
 import { TEMPLATES, THEMES, DEFAULT_TEMPLATE_ID, DEFAULT_THEME_ID, getTemplate, getTheme, buildPalette } from "./templates.js";
 import { extractJob, geminiExtract, SAMPLE_JD } from "./lib/extractLocal.js";
+import { extractColorsFromImage } from "./lib/extractColors.js";
 
 const SAMPLE = {
   title: "Executive — Talent Acquisition",
@@ -16,6 +17,7 @@ const SAMPLE = {
       fontSize: 0, // 0 = auto
       bold: false,
       italic: false,
+      align: "left",
       bullets: [
         "Manage end-to-end recruitment from sourcing to onboarding",
         "Screen resumes and coordinate interviews with hiring managers",
@@ -30,6 +32,7 @@ const SAMPLE = {
       fontSize: 0,
       bold: false,
       italic: false,
+      align: "left",
       bullets: [
         "MBA / BBA in Human Resource Management",
         "1-2 years of experience in recruitment or HR operations",
@@ -47,6 +50,8 @@ const SAMPLE = {
   leftLogoPreset: "none",
   leftLogoText: "",
   leftLogoImage: "",
+  referenceImage: "",
+  extractedColors: null,
   graphic: "magnifier",
   introText: "A renowned educational institution is looking for",
   badgeText: "We Are Hiring",
@@ -86,6 +91,7 @@ export default function App() {
   const [form, setForm] = useState(SAMPLE);
   const [exporting, setExporting] = useState(false);
   const [scale, setScale] = useState(0.4);
+  const refImageFileRef = React.useRef(null);
 
   // AI mode state
   const [apiKey, setApiKey] = useState(() => {
@@ -132,8 +138,10 @@ export default function App() {
         fontSize: Number(s.fontSize) || 0,
         bold: !!s.bold,
         italic: !!s.italic,
+        align: s.align || "left",
         bullets: (s.bullets || []).map((b) => String(b).trim()).filter(Boolean),
       })),
+      extractedColors: form.extractedColors || null,
       leftLogoText: (form.leftLogoText || "").trim(),
       leftLogoImage: form.leftLogoImage || "",
       showLeftLogo: form.showLeftLogo !== false,
@@ -230,8 +238,8 @@ export default function App() {
       companyType: "",
       deadline: "",
       sections: [
-        { id: "resp", heading: "Key Responsibilities", showHeading: true, fontSize: 0, bold: false, italic: false, bullets: [""] },
-        { id: "req", heading: "Requirements", showHeading: true, fontSize: 0, bold: false, italic: false, bullets: [""] },
+        { id: "resp", heading: "Key Responsibilities", showHeading: true, fontSize: 0, bold: false, italic: false, align: "left", bullets: [""] },
+        { id: "req", heading: "Requirements", showHeading: true, fontSize: 0, bold: false, italic: false, align: "left", bullets: [""] },
       ],
       emails: "",
       logoText: "",
@@ -246,6 +254,8 @@ export default function App() {
       leftLogoPreset: "none",
       leftLogoText: "",
       leftLogoImage: "",
+      referenceImage: "",
+      extractedColors: null,
       graphic: "magnifier",
       introText: "",
       showEco: true,
@@ -307,6 +317,25 @@ export default function App() {
     reader.readAsDataURL(file);
     e.target.value = "";
   };
+
+  /* ── Reference image upload + color extraction ── */
+  const onReferenceImageUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const dataUrl = String(reader.result);
+      setForm((p) => ({ ...p, referenceImage: dataUrl }));
+      const scheme = await extractColorsFromImage(dataUrl);
+      if (scheme) {
+        setForm((p) => ({ ...p, extractedColors: scheme }));
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = "";
+  };
+
+  const clearExtractedColors = () => setForm((p) => ({ ...p, extractedColors: null, referenceImage: "" }));
 
   const applyExtract = (result, prev) => {
     let sections = prev.sections && prev.sections.length ? [...prev.sections] : [];
@@ -795,6 +824,36 @@ export default function App() {
                 ) : null}
               </div>
 
+              {/* Reference image theme replicator */}
+              <div className="jp-field">
+                <label>
+                  Reference Poster Style <span className="jp-hint-inline">upload to match colors</span>
+                </label>
+                <div className="jp-logo-row">
+                  <button type="button" className="jp-btn jp-btn-ghost" onClick={() => refImageFileRef.current?.click()}>
+                    Upload Reference Image
+                  </button>
+                  {form.extractedColors ? (
+                    <button type="button" className="jp-remove-sm" onClick={clearExtractedColors}>
+                      ✕ Clear extracted colors
+                    </button>
+                  ) : null}
+                </div>
+                <input ref={refImageFileRef} type="file" accept="image/*" onChange={onReferenceImageUpload} hidden />
+                {form.extractedColors ? (
+                  <div className="jp-logo-preview">
+                    <img src={form.referenceImage} alt="Reference poster" style={{ maxHeight: 120, borderRadius: 8 }} />
+                    <p className="jp-hint-inline" style={{ color: "var(--accent-light)" }}>
+                      ✓ Colors extracted and applied to the poster!
+                    </p>
+                  </div>
+                ) : (
+                  <p className="jp-hint">
+                    Upload a sample corporate flyer to auto-extract accent colors and apply them to your poster.
+                  </p>
+                )}
+              </div>
+
               {/* Recruitment graphic illustration */}
               <div className="jp-field">
                 <label htmlFor="graphic">Recruitment Graphic</label>
@@ -961,6 +1020,20 @@ export default function App() {
                           <i>Italic</i>
                         </span>
                       </label>
+                      <div className="jp-align-btns" role="group" aria-label="Text alignment">
+                        {["left", "center", "right"].map((a) => (
+                          <button
+                            key={a}
+                            type="button"
+                            className={`jp-icon-btn ${(sec.align || "left") === a ? "active" : ""}`}
+                            onClick={() => updateSection(sec.id, { align: a })}
+                            title={`Align ${a}`}
+                            aria-label={`Align ${a}`}
+                          >
+                            {a === "left" ? "≡" : a === "center" ? "☰" : "≡"}
+                          </button>
+                        ))}
+                      </div>
                     </div>
                     <div className="jp-list">
                       {sec.bullets.map((item, i) => (

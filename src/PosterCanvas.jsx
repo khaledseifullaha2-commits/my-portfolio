@@ -324,7 +324,10 @@ const PosterCanvas = forwardRef(function PosterCanvas(
   { data, themeId, templateId, layout = "split", onHeadingChange, onFieldChange, onBulletChange },
   ref
 ) {
-  const t = buildPalette(themeId, templateId);
+  // Merge extracted colors from reference image into palette
+  const extractedColors = data.extractedColors || null;
+  const rawT = buildPalette(themeId, templateId);
+  const t = extractedColors ? { ...rawT, ...extractedColors } : rawT;
   const inBanner = !!t.banner;
   const serifTitle = !!t.serifTitle;
   const stacked = layout === "stacked";
@@ -381,6 +384,7 @@ const PosterCanvas = forwardRef(function PosterCanvas(
     fontSize: Number(s.fontSize) > 0 ? Math.max(8, Math.min(60, Number(s.fontSize))) : 0,
     bold: !!s.bold,
     italic: !!s.italic,
+    align: s.align || "left",
     bullets: (s.bullets || []).map((b) => String(b).trim()).filter(Boolean),
   }));
   const bulletLines = Math.max(0, ...sections.map((s) => s.bullets.length));
@@ -906,8 +910,9 @@ const PosterCanvas = forwardRef(function PosterCanvas(
   const sectionHeader = (s, idx) => {
     if (s.showHeading === false) return null;
     const kind = sectionKind(idx);
+    const sAlign = s.align || "left";
     return corp ? (
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: Math.round((stacked ? 16 : 22) * comp) }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: Math.round((stacked ? 16 : 22) * comp), justifyContent: sAlign === "right" ? "flex-end" : sAlign === "center" ? "center" : "flex-start" }}>
         <div
           style={{
             display: "inline-flex",
@@ -930,25 +935,28 @@ const PosterCanvas = forwardRef(function PosterCanvas(
               fontWeight: 800,
               color: "#ffffff",
               lineHeight: 1.2,
+              textAlign: sAlign,
             }}
           />
         </div>
-        <div style={{ flex: 1, height: 2, background: C.border, position: "relative" }}>
-          <span
-            style={{
-              position: "absolute",
-              right: 0,
-              top: -3,
-              width: 8,
-              height: 8,
-              borderRadius: "50%",
-              background: C.red,
-            }}
-          />
-        </div>
+        {sAlign !== "right" ? (
+          <div style={{ flex: 1, height: 2, background: C.border, position: "relative" }}>
+            <span
+              style={{
+                position: "absolute",
+                right: 0,
+                top: -3,
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: C.red,
+              }}
+            />
+          </div>
+        ) : null}
       </div>
     ) : (
-      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: Math.round((stacked ? 16 : 22) * comp) }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: Math.round((stacked ? 16 : 22) * comp), justifyContent: sAlign === "right" ? "flex-end" : sAlign === "center" ? "center" : "flex-start" }}>
         <div
           style={{
             width: Math.round(48 * comp),
@@ -981,9 +989,9 @@ const PosterCanvas = forwardRef(function PosterCanvas(
   };
 
   const bulletList = (items, kind, s) => (
-    <div>
+    <div style={{ textAlign: s.align || "left" }}>
       {items.map((item, i) => (
-        <div key={i} style={{ display: "flex", gap: 13, alignItems: "flex-start", marginBottom: Math.round(14 * comp) }}>
+        <div key={i} style={{ display: "flex", gap: 13, alignItems: "flex-start", marginBottom: Math.round(14 * comp), justifyContent: (s.align || "left") === "right" ? "flex-end" : "flex-start", flexDirection: (s.align || "left") === "right" ? "row-reverse" : "row" }}>
           <span
             style={{
               width: 9,
@@ -1005,6 +1013,7 @@ const PosterCanvas = forwardRef(function PosterCanvas(
               color: t.body,
               fontWeight: s.bold ? 700 : 400,
               fontStyle: s.italic ? "italic" : "normal",
+              textAlign: s.align || "left",
               flex: 1,
             }}
           />
