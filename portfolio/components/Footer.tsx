@@ -1,6 +1,7 @@
 import Link from "next/link";
 import FooterYear from "./FooterYear";
-import { site, nav } from "@/data/site";
+import SmartLink from "./SmartLink";
+import { site, nav, cvPath } from "@/data/site";
 
 export default function Footer() {
   return (
@@ -11,10 +12,13 @@ export default function Footer() {
         </p>
         <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2" aria-label="Footer">
           {nav.map((item) => (
-            <Link key={item.href} href={item.href} className="footer-link">
+            <SmartLink key={item.href} href={item.href} className="footer-link">
               {item.label}
-            </Link>
+            </SmartLink>
           ))}
+          <a href={cvPath} className="footer-link">
+            Download CV
+          </a>
         </nav>
         <div className="flex items-center justify-center gap-5 md:justify-end">
           <a
@@ -25,6 +29,9 @@ export default function Footer() {
           >
             GitHub
           </a>
+          <Link href="/contact" className="footer-link">
+            Let&apos;s Talk
+          </Link>
           <p className="text-center font-mono text-xs text-muted md:text-right">
             © <FooterYear /> {site.name} · {site.role}
           </p>

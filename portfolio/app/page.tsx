@@ -5,14 +5,26 @@ import Reveal from "@/components/Reveal";
 import WaveDivider from "@/components/WaveDivider";
 import MagneticButton from "@/components/MagneticButton";
 import RoleTypewriter from "@/components/RoleTypewriter";
-import { site, experience, projects, skillsUniverse, contactLinks } from "@/data/site";
+import Milestones from "@/components/Milestones";
+import TechTransmission from "@/components/TechTransmission";
+import { site, experience, projects, contactLinks, cvPath } from "@/data/site";
 
 export const metadata: Metadata = {
   title: `${site.name} | ${site.role}`,
   description: site.description,
 };
 
-const CV_PATH = "/Khaled-Seifullaha-CV.pdf";
+const CV_PATH = cvPath;
+
+function StarDivider() {
+  return (
+    <div className="mx-auto max-w-6xl px-5">
+      <div className="star-divider" aria-hidden="true">
+        <span>✳</span>
+      </div>
+    </div>
+  );
+}
 
 export default function HomePage() {
   const role = experience[0];
@@ -33,8 +45,8 @@ export default function HomePage() {
               <h1 className="hero-title mt-7">
                 <span className="gradient-text">{site.name}</span>
                 <br />
-                Executive talent,{" "}
-                <span className="serif-accent">sourced</span> with intelligence.
+                Executive talent, <span className="serif-accent">sourced</span> with
+                intelligence.
               </h1>
             </Reveal>
             <Reveal delay={140}>
@@ -61,6 +73,7 @@ export default function HomePage() {
                 <MagneticButton>
                   <a
                     href={CV_PATH}
+                    download
                     className="btn btn-secondary"
                     aria-label="Download Khaled Seifullaha's CV as PDF"
                   >
@@ -80,21 +93,33 @@ export default function HomePage() {
 
       {/* ─── 01 · Selected Work ─── */}
       <section className="section" id="projects">
-        <div className="mx-auto max-w-6xl px-5">
+        <div className="grid-lines" aria-hidden="true" />
+        <div className="relative mx-auto max-w-6xl px-5">
           <Reveal>
-            <p className="section-index">01 / Selected Work</p>
-            <h2 className="section-title mt-5">
-              Tools that give recruiters <span className="serif-accent">their hours back</span>
-            </h2>
-            <p className="section-subtitle mt-4">
-              Recruitment workflows, AI agents, and web tools built to remove the manual
-              busywork from hiring.
-            </p>
+            <div className="editorial-head">
+              <div>
+                <p className="section-index">01 / Selected Work</p>
+                <h2 className="section-title mt-5">
+                  Tools that give recruiters <span className="serif-accent">their hours back</span>
+                </h2>
+                <p className="section-subtitle mt-4">
+                  Recruitment workflows, AI agents, and web tools built to remove the manual
+                  busywork from hiring.
+                </p>
+              </div>
+              <p className="editorial-meta">
+                <span className="editorial-meta-num">
+                  {String(projects.length).padStart(2, "0")}
+                </span>
+                <span className="editorial-meta-line" aria-hidden="true" />
+                Projects
+              </p>
+            </div>
           </Reveal>
           <div className="project-grid mt-12">
             {projects.map((p, i) => (
               <Reveal key={p.name} delay={i * 80}>
-                <article className="project-card">
+                <article className="project-card corner-frame">
                   <span className="project-index">{p.index}</span>
                   <h3 className="project-name">{p.name}</h3>
                   <p className="project-tagline">{p.tagline}</p>
@@ -130,7 +155,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── 02 · Experience ─── */}
+      <StarDivider />
+
+      {/* ─── 02 · Chronology ─── */}
+      <Milestones />
+
+      <StarDivider />
+
+      {/* ─── 03 · Experience ─── */}
       <section className="section" id="experience">
         <div className="hero-orb hero-orb-2" aria-hidden="true" />
         <div className="relative mx-auto max-w-6xl px-5">
@@ -174,58 +206,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── 03 · Skills Universe ─── */}
-      <section className="section" id="skills">
-        <div className="mx-auto max-w-6xl px-5">
-          <Reveal>
-            <p className="section-index">03 / Skills Universe</p>
-            <h2 className="section-title mt-5">
-              Recruitment craft, <span className="serif-accent">AI-native habits</span>
-            </h2>
-            <p className="section-subtitle mt-4">
-              The operating system behind the work: sourcing discipline plus modern
-              automation tooling.
-            </p>
-          </Reveal>
-          <div className="skill-groups mt-12">
-            {skillsUniverse.map((group, i) => (
-              <Reveal key={group.label} delay={i * 60}>
-                <div className="skill-group">
-                  <p className="skill-group-label">{group.label}</p>
-                  <div className="stack-chips">
-                    {group.items.map((item) => (
-                      <span key={item} className="stack-chip">
-                        {item}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-            <Reveal delay={skillsUniverse.length * 60}>
-              <div className="skill-group">
-                <p className="skill-group-label">Explore Further</p>
-                <p className="mt-4 text-sm leading-relaxed text-muted">
-                  The full bento of competencies, services, and the live case study behind
-                  the job poster tool.
-                </p>
-                <div className="mt-5">
-                  <Link
-                    href="/skills-services"
-                    className="nav-link inline-flex items-center gap-2 text-accent-light hover:text-foreground"
-                  >
-                    Skills &amp; Services →
-                  </Link>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
+      <StarDivider />
 
-      {/* ─── 04 · Contact ─── */}
+      {/* ─── 04 · Live technology transmission ─── */}
+      <TechTransmission />
+
+      <StarDivider />
+
+      {/* ─── 05 · Contact ─── */}
       <section className="section" id="contact">
         <div className="hero-orb hero-orb-1" aria-hidden="true" />
+        <div className="grid-lines" aria-hidden="true" />
         <div className="relative mx-auto max-w-6xl px-5">
           <Reveal>
             <p className="section-index">04 / Contact</p>
@@ -278,7 +269,7 @@ export default function HomePage() {
             </Reveal>
           </div>
           <Reveal>
-            <div className="offer-callout mt-12">
+            <div className="offer-callout corner-frame mt-12">
               <p className="offer-callout-label">When to bring me in</p>
               <p className="offer-callout-text">
                 High-volume sourcing, executive talent search, or modernizing HR workflows

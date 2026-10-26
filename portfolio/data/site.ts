@@ -17,12 +17,129 @@ export const site = {
     "End-to-end recruitment and AI-powered talent research from Dhaka, Bangladesh.",
 };
 
+export const cvPath = "/Khaled-Seifullaha-CV.pdf";
+
+/**
+ * Nav uses `/#hash` for chapters inside the home page (handled by SmartLink,
+ * which smooth-scrolls when we are already home and lets Next.js navigate
+ * to the anchor when we are on a subpage).
+ */
 export const nav = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/experience", label: "Experience" },
-  { href: "/skills-services", label: "Skills & Services" },
-  { href: "/contact", label: "Contact" },
+  { href: "/#projects", label: "Selected Work" },
+  { href: "/about", label: "Profile" },
+  { href: "/#experience", label: "Experience" },
+  { href: "/skills-services", label: "Skills" },
+  { href: "/#contact", label: "Let's Connect" },
+];
+
+export type Milestone = {
+  index: string;
+  range: string;
+  title: string;
+  org: string;
+  text: string;
+  tags: string[];
+};
+
+/** Chronology built strictly from verified education and role history. */
+export const milestones: Milestone[] = [
+  {
+    index: "01",
+    range: "2017 — 2019",
+    title: "A commerce foundation",
+    org: "BAF Shaheen College, Kurmitola",
+    text: "HSC in Commerce, completed January 2019 with a GPA of 4.92 / 5.00 — the groundwork for a management-led career.",
+    tags: ["HSC", "Commerce", "GPA 4.92"],
+  },
+  {
+    index: "02",
+    range: "2019 — 2024",
+    title: "Management, formally studied",
+    org: "Jagannath University",
+    text: "BBA in Management, completed January 2024 with a CGPA of 3.26 / 4.00. Organisational behaviour and human capital became the centre of gravity.",
+    tags: ["BBA", "Management", "Jagannath University"],
+  },
+  {
+    index: "03",
+    range: "2024 — 2025",
+    title: "Specialising in human capital",
+    org: "Jagannath University",
+    text: "MBA in Human Resource Management, completed January 2025 with a CGPA of 3.35 / 4.00 — recruitment operations, HR policy, and workforce planning.",
+    tags: ["MBA", "HRM", "CGPA 3.35"],
+  },
+  {
+    index: "04",
+    range: "2026 — Present",
+    title: "From study to practice",
+    org: "Enroute International Limited",
+    text: "Executive, Talent Specialist in Dhaka — running end-to-end recruitment while layering AI-assisted research and compliance knowledge (RMG, structured interviewing) on top.",
+    tags: ["Talent Acquisition", "RMG Compliance", "AI Sourcing"],
+  },
+];
+
+export type TechCategory =
+  | "Languages"
+  | "Frontend"
+  | "Backend"
+  | "AI/ML"
+  | "DevOps"
+  | "Databases";
+
+export const techFilters: ("All Skills" | TechCategory)[] = [
+  "All Skills",
+  "Languages",
+  "Frontend",
+  "Backend",
+  "AI/ML",
+  "DevOps",
+  "Databases",
+];
+
+/** Only tools Khaled actually uses or has shipped with. */
+export const techUniverse: { name: string; category: TechCategory }[] = [
+  { name: "Python", category: "Languages" },
+  { name: "TypeScript", category: "Languages" },
+  { name: "JavaScript", category: "Languages" },
+  { name: "HTML", category: "Languages" },
+  { name: "CSS", category: "Languages" },
+  { name: "Next.js", category: "Frontend" },
+  { name: "React", category: "Frontend" },
+  { name: "Tailwind CSS", category: "Frontend" },
+  { name: "Streamlit", category: "Frontend" },
+  { name: "Next.js API Routes", category: "Backend" },
+  { name: "REST APIs", category: "Backend" },
+  { name: "Gemini API", category: "Backend" },
+  { name: "Outlook Integration", category: "Backend" },
+  { name: "Hermes Agent", category: "AI/ML" },
+  { name: "Prompt Engineering", category: "AI/ML" },
+  { name: "LLM APIs", category: "AI/ML" },
+  { name: "AI Research Tooling", category: "AI/ML" },
+  { name: "Git & GitHub", category: "DevOps" },
+  { name: "Vercel", category: "DevOps" },
+  { name: "npm", category: "DevOps" },
+  { name: "Candidate Databases", category: "Databases" },
+  { name: "ATS Records", category: "Databases" },
+  { name: "HRIS Data", category: "Databases" },
+];
+
+/** Decorative code fragments for the transmission backdrop. */
+export const codeStream = [
+  "const shortlist = await source(role)",
+  "def screen(resume):",
+  "  return score(resume) > 0.8",
+  "await hermes.task.create({due})",
+  "import streamlit as st",
+  "st.button('Remind me')",
+  "export async function POST(req)",
+  "  const { jd } = await req.json()",
+  "pipeline.filter(Boolean).map(rank)",
+  "SELECT * FROM candidates WHERE fit",
+  "git commit -m 'ship it'",
+  "vercel deploy --prod",
+  "prompt += context.role" ,
+  "response = llm.invoke(prompt)",
+  "for c in candidates: notify(c)",
+  "type Stage = 'sourced' | 'hired'",
 ];
 
 export const about = {
