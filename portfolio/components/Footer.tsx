@@ -16,9 +16,19 @@ export default function Footer() {
             </Link>
           ))}
         </nav>
-        <p className="text-center font-mono text-xs text-muted md:text-right">
-          © <FooterYear /> {site.name} · {site.role}
-        </p>
+        <div className="flex items-center justify-center gap-5 md:justify-end">
+          <a
+            href={site.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-link"
+          >
+            GitHub
+          </a>
+          <p className="text-center font-mono text-xs text-muted md:text-right">
+            © <FooterYear /> {site.name} · {site.role}
+          </p>
+        </div>
       </div>
     </footer>
   );

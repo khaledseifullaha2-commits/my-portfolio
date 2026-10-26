@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import StatusBar from "@/components/StatusBar";
@@ -9,8 +10,17 @@ import ScrollProgress from "@/components/ScrollProgress";
 import AiAssistant from "@/components/AiAssistant";
 import { site } from "@/data/site";
 
+/* Editorial serif used only for italic accent words in headlines */
+const serifItalic = Instrument_Serif({
+  weight: "400",
+  style: "italic",
+  subsets: ["latin"],
+  variable: "--font-editorial",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://khaled-seifullaha.vercel.app"),
+  metadataBase: new URL("https://my-portfolio-main-cyan-chi.vercel.app"),
   title: {
     default: `${site.name} | ${site.role}`,
     template: `%s | ${site.name}`,
@@ -18,6 +28,7 @@ export const metadata: Metadata = {
   description: site.description,
   keywords: [
     "Khaled Seifullaha",
+    "Talent Specialist",
     "Executive Talent Specialist",
     "Talent Acquisition",
     "Recruitment",
@@ -26,6 +37,7 @@ export const metadata: Metadata = {
     "Bangladesh",
     "AI recruitment",
     "Candidate Sourcing",
+    "HR automation",
   ],
   authors: [{ name: site.name }],
   creator: site.name,
@@ -59,16 +71,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  colorScheme: "light dark",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f5f5f7" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0b" },
-  ],
+  colorScheme: "dark",
+  themeColor: "#0a0708",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={serifItalic.variable}>
       <body className="min-h-screen antialiased">
         <ScrollProgress />
         <CustomCursor />

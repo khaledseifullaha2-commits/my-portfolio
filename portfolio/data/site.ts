@@ -6,6 +6,8 @@ export const site = {
   phoneHref: "tel:+8801405710606",
   location: "Pallabi, Mirpur-12, Dhaka, Bangladesh",
   mapsUrl: "https://maps.google.com/?q=Pallabi,+Mirpur-12,+Dhaka",
+  github: "https://github.com/khaledseifullaha2-commits",
+  githubHandle: "github.com/khaledseifullaha2-commits",
   linkedin: "https://www.linkedin.com/in/khaled-seifullaha24b763213/",
   linkedinHandle: "linkedin.com/in/khaled-seifullaha24b763213",
   tagline: "AI-Powered Recruitment · Data-Driven Decisions",
@@ -157,13 +159,28 @@ export const contactLinks = [
   { icon: "📍", label: site.location, href: site.mapsUrl, external: true },
 ];
 
-export const projects = [
+export type Project = {
+  index: string;
+  name: string;
+  tagline: string;
+  href: string;
+  external?: boolean;
+  cta: string;
+  stack?: string[];
+  bottleneck?: string;
+  choice?: string;
+  deliverable?: string;
+  impact?: string;
+};
+
+export const projects: Project[] = [
   {
     index: "01",
     name: "AI Job Poster Generator",
     tagline: "From a raw job description to a share-ready recruitment poster in one click.",
     href: "/job-poster",
     cta: "Try it live",
+    stack: ["Next.js", "Gemini API", "html-to-image"],
     bottleneck:
       "Recruiters rewrite job ads into social-ready posters by hand, a slow, inconsistent process that blocks quick hiring pushes.",
     choice:
@@ -172,6 +189,26 @@ export const projects = [
       "A live studio that parses title, deadline, responsibilities and requirements, then exports a crisp 1080×1350 PNG ready for LinkedIn or Facebook.",
     impact:
       "Turns minutes of manual poster work into one click, with no design tooling required and full control over every extracted field.",
+  },
+  {
+    index: "02",
+    name: "HR-TaskFlow",
+    tagline:
+      "An Outlook-connected AI task manager and reminder app, built with Hermes Agent and Streamlit, that keeps recruitment follow-ups from slipping through the cracks.",
+    href: "https://github.com/khaledseifullaha2-commits",
+    external: true,
+    cta: "View on GitHub",
+    stack: ["Hermes Agent", "Streamlit", "Outlook"],
+  },
+  {
+    index: "03",
+    name: "AI & Recruitment Automation Tools",
+    tagline:
+      "Custom recruitment workflows, scrapers, and web tools that cut manual sourcing effort and keep hiring pipelines moving.",
+    href: "https://github.com/khaledseifullaha2-commits",
+    external: true,
+    cta: "View on GitHub",
+    stack: ["Python", "Scrapers", "Workflow Automation"],
   },
 ];
 
@@ -184,6 +221,35 @@ export const stackStrip = [
   "ATS",
   "HRIS",
   "Microsoft 365",
+];
+
+export const skillsUniverse = [
+  {
+    label: "Recruitment Operations",
+    items: [
+      "Candidate Sourcing",
+      "Resume Screening",
+      "Interview Coordination",
+      "ATS & HRIS",
+      "Hiring Facilitation",
+    ],
+  },
+  {
+    label: "AI Agents & Hermes",
+    items: ["Hermes Agent", "AI Prompt Writing", "AI-Assisted Research", "AI Productivity Tools"],
+  },
+  {
+    label: "Python",
+    items: ["Scrapers & Automation Scripts", "Data Extraction", "Workflow Tooling"],
+  },
+  {
+    label: "Workflow Automation",
+    items: ["Outlook-Connected Workflows", "Reminders & Task Flow", "Process Automation"],
+  },
+  {
+    label: "Frontend",
+    items: ["Next.js", "Tailwind CSS", "HTML & CSS", "Vibe-Coder Prototyping"],
+  },
 ];
 
 export const chatQA = [
